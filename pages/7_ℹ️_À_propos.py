@@ -65,8 +65,9 @@ section = st.selectbox(
         "📈 Formules de Performance",
         "📐 Indicateurs Techniques",
         "🔗 Corrélations",
-        "� Bêta (Beta)",
-        "�📊 Statistiques Descriptives",
+        "📉 Bêta (Beta)",
+        "📊 Statistiques Descriptives",
+        "🎯 Stratégies de Portefeuille",
         "ℹ️ À propos de l'application"
     ]
 )
@@ -724,6 +725,506 @@ elif section == "📊 Statistiques Descriptives":
         • <strong>Rendement Total</strong> : Performance globale sur toute la période d'observation.
     </div>
     """, unsafe_allow_html=True)
+
+# ==================== STRATÉGIES DE PORTEFEUILLE ====================
+elif section == "🎯 Stratégies de Portefeuille":
+    st.header("🎯 Stratégies de Portefeuille")
+    
+    st.markdown("""
+    Cette section présente les principales méthodes d'optimisation de portefeuille utilisées dans l'application,
+    avec leur contexte historique, leurs formules mathématiques et des illustrations pratiques.
+    """)
+    
+    # Sous-sections pour les stratégies
+    strategy_tabs = st.tabs(["📐 Markowitz (Moyenne-Variance)", "⚖️ Risk Parity (Parité des Risques)"])
+    
+    # ==================== MARKOWITZ ====================
+    with strategy_tabs[0]:
+        st.subheader("📐 Théorie Moderne du Portefeuille (Markowitz)")
+        
+        # Histoire
+        st.markdown("### 📜 Contexte Historique")
+        
+        col_hist1, col_hist2 = st.columns([2, 1])
+        
+        with col_hist1:
+            st.markdown("""
+            <div class="example-box">
+                <strong>🎓 Harry Markowitz (1927-2023)</strong><br><br>
+                En <strong>1952</strong>, Harry Markowitz, alors étudiant à l'Université de Chicago, publie l'article 
+                révolutionnaire <em>"Portfolio Selection"</em> dans le Journal of Finance.<br><br>
+                Cette théorie, appelée <strong>Théorie Moderne du Portefeuille (MPT)</strong>, lui vaudra le 
+                <strong>Prix Nobel d'Économie en 1990</strong>, partagé avec William Sharpe et Merton Miller.<br><br>
+                <strong>Innovation clé :</strong> Avant Markowitz, les investisseurs sélectionnaient les actifs 
+                individuellement. Il a démontré qu'il fallait considérer le portefeuille dans son ensemble, 
+                en tenant compte des <strong>corrélations entre les actifs</strong>.
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col_hist2:
+            st.markdown("""
+            <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #E8DDD4, #FAF9F6); border-radius: 15px;">
+                <span style="font-size: 80px;">🏆</span><br>
+                <strong style="font-size: 18px;">Prix Nobel 1990</strong><br>
+                <em>Sciences Économiques</em>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Principe fondamental
+        st.markdown("### 💡 Principe Fondamental")
+        
+        st.markdown("""
+        <div class="interpretation-box">
+            <strong>L'idée centrale :</strong><br><br>
+            <em>"Ne mettez pas tous vos œufs dans le même panier"</em><br><br>
+            La diversification permet de <strong>réduire le risque</strong> d'un portefeuille sans nécessairement 
+            sacrifier le rendement. Deux actifs qui ne sont pas parfaitement corrélés permettent de "lisser" 
+            les fluctuations du portefeuille.
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Formules
+        st.markdown("### 📊 Formules Mathématiques")
+        
+        col_f1, col_f2 = st.columns(2)
+        
+        with col_f1:
+            st.markdown("""
+            <div class="formula-box">
+                <strong>Rendement du portefeuille :</strong><br><br>
+                E(Rp) = Σ wi × E(Ri)<br><br>
+                où :<br>
+                • wi = poids de l'actif i<br>
+                • E(Ri) = rendement espéré de l'actif i<br>
+                • Σ wi = 1 (somme des poids = 100%)
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col_f2:
+            st.markdown("""
+            <div class="formula-box">
+                <strong>Risque (variance) du portefeuille :</strong><br><br>
+                σp² = Σi Σj wi × wj × σi × σj × ρij<br><br>
+                où :<br>
+                • σi = volatilité de l'actif i<br>
+                • ρij = corrélation entre i et j<br>
+                • Le terme σi × σj × ρij = Cov(i,j)
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="formula-box">
+            <strong>Ratio de Sharpe (mesure de performance ajustée au risque) :</strong><br><br>
+            Sharpe = (E(Rp) - Rf) / σp<br><br>
+            où Rf = taux sans risque (généralement le taux des obligations d'État)<br><br>
+            <em>Plus le ratio est élevé, meilleur est le rendement par unité de risque prise.</em>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Illustration : Frontière Efficiente
+        st.markdown("### 📈 La Frontière Efficiente")
+        
+        st.markdown("""
+        La **frontière efficiente** représente l'ensemble des portefeuilles offrant le meilleur rendement 
+        pour chaque niveau de risque (ou le risque minimal pour chaque niveau de rendement).
+        """)
+        
+        # Génération de la frontière efficiente simulée
+        np.random.seed(42)
+        n_portfolios = 2000
+        
+        # Simuler des rendements et volatilités
+        returns_sim = np.random.uniform(0.02, 0.25, n_portfolios)
+        volatilities_sim = np.random.uniform(0.08, 0.35, n_portfolios)
+        
+        # Filtrer pour créer une forme réaliste
+        mask = (returns_sim > 0.5 * volatilities_sim - 0.02) & (returns_sim < 0.8 * volatilities_sim + 0.05)
+        returns_sim = returns_sim[mask]
+        volatilities_sim = volatilities_sim[mask]
+        
+        # Calculer les ratios de Sharpe (Rf = 2%)
+        sharpe_sim = (returns_sim - 0.02) / volatilities_sim
+        
+        # Frontière efficiente (enveloppe supérieure)
+        frontier_vol = np.linspace(0.08, 0.30, 50)
+        frontier_ret = 0.02 + 0.6 * frontier_vol + 0.5 * frontier_vol**2
+        
+        fig_frontier = go.Figure()
+        
+        # Nuage de points des portefeuilles
+        fig_frontier.add_trace(go.Scatter(
+            x=volatilities_sim * 100,
+            y=returns_sim * 100,
+            mode='markers',
+            marker=dict(
+                size=5,
+                color=sharpe_sim,
+                colorscale='RdYlGn',
+                colorbar=dict(title="Sharpe"),
+                opacity=0.6
+            ),
+            name='Portefeuilles possibles',
+            hovertemplate='Volatilité: %{x:.1f}%<br>Rendement: %{y:.1f}%<extra></extra>'
+        ))
+        
+        # Frontière efficiente
+        fig_frontier.add_trace(go.Scatter(
+            x=frontier_vol * 100,
+            y=frontier_ret * 100,
+            mode='lines',
+            line=dict(color='#4A3728', width=3),
+            name='Frontière Efficiente'
+        ))
+        
+        # Points clés
+        # Portefeuille à variance minimale
+        min_vol_idx = np.argmin(frontier_vol)
+        fig_frontier.add_trace(go.Scatter(
+            x=[frontier_vol[min_vol_idx] * 100],
+            y=[frontier_ret[min_vol_idx] * 100],
+            mode='markers+text',
+            marker=dict(size=15, color='#3B82F6', symbol='star'),
+            text=['Min. Variance'],
+            textposition='top right',
+            name='Variance Minimale'
+        ))
+        
+        # Portefeuille tangent (Max Sharpe)
+        tangent_idx = 25
+        fig_frontier.add_trace(go.Scatter(
+            x=[frontier_vol[tangent_idx] * 100],
+            y=[frontier_ret[tangent_idx] * 100],
+            mode='markers+text',
+            marker=dict(size=15, color='#10B981', symbol='star'),
+            text=['Max Sharpe'],
+            textposition='top right',
+            name='Portefeuille Tangent'
+        ))
+        
+        fig_frontier.update_layout(
+            title="Frontière Efficiente de Markowitz",
+            xaxis_title="Risque (Volatilité Annualisée %)",
+            yaxis_title="Rendement Espéré Annualisé (%)",
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font=dict(color='#4A3728'),
+            height=500,
+            legend=dict(orientation="h", yanchor="bottom", y=1.02)
+        )
+        fig_frontier.update_xaxes(gridcolor='#E8DDD4')
+        fig_frontier.update_yaxes(gridcolor='#E8DDD4')
+        
+        st.plotly_chart(fig_frontier, use_container_width=True)
+        
+        col_exp1, col_exp2 = st.columns(2)
+        
+        with col_exp1:
+            st.markdown("""
+            <div class="interpretation-box">
+                <strong>⭐ Portefeuille à Variance Minimale</strong><br><br>
+                Le portefeuille ayant le <strong>risque le plus faible</strong> possible, 
+                quel que soit le rendement. Idéal pour les investisseurs très averses au risque.
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col_exp2:
+            st.markdown("""
+            <div class="interpretation-box">
+                <strong>⭐ Portefeuille Tangent (Max Sharpe)</strong><br><br>
+                Le portefeuille offrant le <strong>meilleur rendement ajusté au risque</strong>. 
+                C'est le choix optimal pour la plupart des investisseurs rationnels.
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Limites
+        st.markdown("### ⚠️ Limites de la Théorie")
+        
+        st.markdown("""
+        <div class="warning-box">
+            <strong>Hypothèses simplificatrices :</strong><br><br>
+            • Les rendements suivent une distribution normale (pas toujours vrai)<br>
+            • Les corrélations sont stables dans le temps (faux en période de crise)<br>
+            • Les investisseurs sont uniquement guidés par rendement et risque<br>
+            • Il n'y a pas de coûts de transaction<br>
+            • Les estimations de rendements futurs sont souvent imprécises<br><br>
+            <strong>Conséquence :</strong> Les portefeuilles optimisés peuvent être très concentrés et instables.
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # ==================== RISK PARITY ====================
+    with strategy_tabs[1]:
+        st.subheader("⚖️ Risk Parity (Parité des Risques)")
+        
+        # Histoire
+        st.markdown("### 📜 Contexte Historique")
+        
+        col_hist1, col_hist2 = st.columns([2, 1])
+        
+        with col_hist1:
+            st.markdown("""
+            <div class="example-box">
+                <strong>🏛️ Bridgewater Associates & Ray Dalio</strong><br><br>
+                Le concept de Risk Parity a été popularisé par <strong>Ray Dalio</strong> et son fonds 
+                <strong>Bridgewater Associates</strong> au début des années 1990 avec la stratégie 
+                <strong>"All Weather"</strong>.<br><br>
+                <strong>Contexte :</strong> La crise de 2008 a montré les limites de la diversification 
+                traditionnelle (les corrélations augmentent en période de crise). Le Risk Parity propose 
+                une approche différente : <strong>équilibrer les contributions au risque</strong> plutôt 
+                que les montants investis.<br><br>
+                <strong>Succès :</strong> Cette stratégie a gagné en popularité car elle a mieux résisté 
+                aux crises que les portefeuilles traditionnels 60/40 (60% actions, 40% obligations).
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col_hist2:
+            st.markdown("""
+            <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #E8DDD4, #FAF9F6); border-radius: 15px;">
+                <span style="font-size: 80px;">⚖️</span><br>
+                <strong style="font-size: 18px;">All Weather</strong><br>
+                <em>Strategy depuis 1996</em>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Principe fondamental
+        st.markdown("### 💡 Principe Fondamental")
+        
+        col_princ1, col_princ2 = st.columns(2)
+        
+        with col_princ1:
+            st.markdown("""
+            <div class="warning-box">
+                <strong>❌ Problème du portefeuille traditionnel 60/40 :</strong><br><br>
+                Dans un portefeuille 60% actions / 40% obligations :<br><br>
+                • Les actions contribuent à <strong>~90% du risque total</strong><br>
+                • Les obligations ne contribuent qu'à <strong>~10% du risque</strong><br><br>
+                <em>La diversification en montants ne signifie pas diversification en risque !</em>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col_princ2:
+            st.markdown("""
+            <div class="interpretation-box">
+                <strong>✅ Solution Risk Parity :</strong><br><br>
+                Chaque actif contribue <strong>également au risque</strong> total du portefeuille.<br><br>
+                • Si 4 actifs → chacun contribue à 25% du risque<br>
+                • Les actifs moins volatils ont un poids plus élevé<br>
+                • Les actifs très volatils ont un poids plus faible<br><br>
+                <em>Vraie diversification du risque !</em>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Formules
+        st.markdown("### 📊 Formules Mathématiques")
+        
+        st.markdown("""
+        <div class="formula-box">
+            <strong>Contribution marginale au risque (MCR) :</strong><br><br>
+            MCRi = ∂σp / ∂wi = (Σ × w)i / σp<br><br>
+            où :<br>
+            • Σ = matrice de covariance<br>
+            • w = vecteur des poids<br>
+            • σp = volatilité du portefeuille
+        </div>
+        """, unsafe_allow_html=True)
+        
+        col_f1, col_f2 = st.columns(2)
+        
+        with col_f1:
+            st.markdown("""
+            <div class="formula-box">
+                <strong>Contribution au risque total (RC) :</strong><br><br>
+                RCi = wi × MCRi<br><br>
+                <em>La contribution de chaque actif au risque global</em>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col_f2:
+            st.markdown("""
+            <div class="formula-box">
+                <strong>Objectif Risk Parity :</strong><br><br>
+                RCi = σp / N  pour tout i<br><br>
+                <em>Chaque actif contribue également (1/N du risque total)</em>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="formula-box">
+            <strong>Approximation simplifiée (sans corrélation) :</strong><br><br>
+            wi ∝ 1 / σi<br><br>
+            <em>Le poids est inversement proportionnel à la volatilité de chaque actif</em><br><br>
+            <strong>Exemple :</strong> Si Action A a σ=20% et Action B a σ=10%, alors B aura 2× plus de poids que A.
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Illustration graphique
+        st.markdown("### 📈 Comparaison Visuelle")
+        
+        # Données d'exemple
+        assets = ['Actions', 'Obligations', 'Matières P.', 'Immobilier']
+        volatilities = [20, 5, 15, 12]  # Volatilités annualisées
+        
+        # Portefeuille équipondéré (25% chaque)
+        weights_equal = [25, 25, 25, 25]
+        risk_contrib_equal = [w * v for w, v in zip(weights_equal, volatilities)]
+        total_risk_equal = sum(risk_contrib_equal)
+        risk_contrib_equal_pct = [r / total_risk_equal * 100 for r in risk_contrib_equal]
+        
+        # Portefeuille Risk Parity (inverse volatilité)
+        inv_vol = [1/v for v in volatilities]
+        total_inv_vol = sum(inv_vol)
+        weights_rp = [iv / total_inv_vol * 100 for iv in inv_vol]
+        risk_contrib_rp = [w * v for w, v in zip(weights_rp, volatilities)]
+        total_risk_rp = sum(risk_contrib_rp)
+        risk_contrib_rp_pct = [r / total_risk_rp * 100 for r in risk_contrib_rp]
+        
+        col_chart1, col_chart2 = st.columns(2)
+        
+        with col_chart1:
+            st.markdown("#### Portefeuille Équipondéré (25% chaque)")
+            
+            fig_equal = go.Figure()
+            
+            fig_equal.add_trace(go.Bar(
+                name='Poids (%)',
+                x=assets,
+                y=weights_equal,
+                marker_color='#8B7355',
+                text=[f'{w:.0f}%' for w in weights_equal],
+                textposition='auto'
+            ))
+            
+            fig_equal.add_trace(go.Bar(
+                name='Contribution au Risque (%)',
+                x=assets,
+                y=risk_contrib_equal_pct,
+                marker_color='#EF4444',
+                text=[f'{r:.0f}%' for r in risk_contrib_equal_pct],
+                textposition='auto'
+            ))
+            
+            fig_equal.update_layout(
+                barmode='group',
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='#4A3728'),
+                height=350,
+                legend=dict(orientation="h", yanchor="bottom", y=1.02)
+            )
+            fig_equal.update_xaxes(gridcolor='#E8DDD4')
+            fig_equal.update_yaxes(gridcolor='#E8DDD4')
+            
+            st.plotly_chart(fig_equal, use_container_width=True)
+            
+            st.markdown("""
+            <div class="warning-box">
+                <strong>⚠️ Problème :</strong> Les actions (20% vol) dominent le risque avec ~48%,
+                alors que les obligations (5% vol) ne contribuent qu'à ~12%.
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col_chart2:
+            st.markdown("#### Portefeuille Risk Parity")
+            
+            fig_rp = go.Figure()
+            
+            fig_rp.add_trace(go.Bar(
+                name='Poids (%)',
+                x=assets,
+                y=weights_rp,
+                marker_color='#8B7355',
+                text=[f'{w:.0f}%' for w in weights_rp],
+                textposition='auto'
+            ))
+            
+            fig_rp.add_trace(go.Bar(
+                name='Contribution au Risque (%)',
+                x=assets,
+                y=risk_contrib_rp_pct,
+                marker_color='#10B981',
+                text=[f'{r:.0f}%' for r in risk_contrib_rp_pct],
+                textposition='auto'
+            ))
+            
+            fig_rp.update_layout(
+                barmode='group',
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='#4A3728'),
+                height=350,
+                legend=dict(orientation="h", yanchor="bottom", y=1.02)
+            )
+            fig_rp.update_xaxes(gridcolor='#E8DDD4')
+            fig_rp.update_yaxes(gridcolor='#E8DDD4')
+            
+            st.plotly_chart(fig_rp, use_container_width=True)
+            
+            st.markdown("""
+            <div class="interpretation-box">
+                <strong>✅ Solution :</strong> Les contributions au risque sont équilibrées (~25% chacun).
+                Les obligations ont plus de poids pour compenser leur faible volatilité.
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Avantages et inconvénients
+        st.markdown("### ⚖️ Avantages et Inconvénients")
+        
+        col_av, col_inc = st.columns(2)
+        
+        with col_av:
+            st.markdown("""
+            <div class="interpretation-box">
+                <strong>✅ Avantages :</strong><br><br>
+                • Vraie diversification du risque<br>
+                • Meilleure résistance aux crises<br>
+                • Ne nécessite pas d'estimer les rendements futurs<br>
+                • Performance stable sur différents régimes de marché<br>
+                • Réduit le risque de concentration
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col_inc:
+            st.markdown("""
+            <div class="warning-box">
+                <strong>⚠️ Inconvénients :</strong><br><br>
+                • Peut nécessiter un effet de levier pour atteindre les rendements cibles<br>
+                • Sensible aux estimations de volatilité<br>
+                • Surpondère les actifs peu volatils (obligations)<br>
+                • Coûts de rééquilibrage fréquent<br>
+                • Moins performant dans les marchés haussiers forts
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Comparaison finale
+        st.markdown("### 🔄 Markowitz vs Risk Parity")
+        
+        st.markdown("""
+        | Critère | Markowitz | Risk Parity |
+        |---------|-----------|-------------|
+        | **Objectif** | Maximiser rendement/risque | Équilibrer les contributions au risque |
+        | **Données requises** | Rendements, volatilités, corrélations | Volatilités, corrélations |
+        | **Sensibilité aux estimations** | Très sensible aux rendements | Moins sensible (pas de rendements) |
+        | **Concentration** | Peut être très concentré | Diversifié par construction |
+        | **Idéal pour** | Investisseurs avec convictions fortes | Investisseurs cherchant la stabilité |
+        | **Utilisation de levier** | Rarement | Souvent nécessaire |
+        """)
 
 # ==================== À PROPOS DE L'APPLICATION ====================
 elif section == "ℹ️ À propos de l'application":
