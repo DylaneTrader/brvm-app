@@ -1,0 +1,33 @@
+# Environnement virtuel Python
+.venv/
+venv/
+env/
+ENV/
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Fichiers IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Fichiers temporaires
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Fichiers de données volumineux (optionnel - décommentez si nécessaire)
+# *.xlsx
+# *.csv
+
+# Secrets Streamlit (si utilisés)
+.streamlit/secrets.toml
